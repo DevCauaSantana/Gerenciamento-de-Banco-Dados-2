@@ -1,0 +1,98 @@
+--TABELA CRIMINOSO
+
+CREATE TABLE CRIMINOSO (codcriminoso serial,
+					   nome varchar(40),
+					   doc_identificacao int,
+					   CONSTRAINT Pk_CRIMINOSO PRIMARY KEY (codcriminoso));
+					   
+INSERT INTO CRIMINOSO VALUES (default, 'Pedro', 111),
+(default, 'Julia', 222),
+(default, 'Samuel', 333),
+(default, 'Rafael', 444),
+(default, 'Anna', 555),
+(default, 'Nelson', 666),
+(default, 'Gustavo', 777);
+
+SELECT * FROM CRIMINOSO;
+
+--TABELA VITIMA
+
+CREATE TABLE VITIMA(codvitima serial,
+					cidade varchar(40),
+					RG int,
+					nome varchar(40),
+					CONSTRAINT Pk_VITIMA PRIMARY KEY (codvitima));
+					
+ INSERT INTO VITIMA VALUES (default, 'Votuporanga', 101, 'Kayky'),
+ (default, 'Votuporanga', 102, 'Ricardo'),
+ (default, 'Cosmorama', 103, 'Cauã'),
+ (default, 'Cardoso', 104, 'Théo'),
+ (default, 'Rio Preto', 105, 'Natal'),
+ (default, 'Valentim Gentil', 106, 'Leonardo'),
+ (default, 'Mirassol', 107, 'Malu'),
+ (default, 'Votuporanga', 108, 'Thiago');
+ 
+ SELECT * FROM VITIMA;
+ 
+ --TABELA DELEGACIA
+					
+CREATE TABLE DELEGACIA (coddel serial,
+					   endereco varchar(40),
+					   delegado varchar(40),
+					   telefone int,
+					   CONSTRAINT Pk_DELEGACIA PRIMARY KEY (coddel));
+					   
+  INSERT INTO DELEGACIA VALUES (default, 'Rua Banana', 'Peixoto', 40020922),
+  (default, 'Rua Peixes', 'Lima', 40020923),
+  (default, 'Rua Alegria', 'Mioto', 40020924);
+  
+  SELECT * FROM DELEGACIA;
+  
+--TABELA CRIME
+					   
+CREATE TABLE CRIME (codcrime serial,
+					data date,
+					local varchar(40),
+					coddel int,
+					codvitima int,
+					codcriminoso int,
+					CONSTRAINT Pk_CRIME PRIMARY KEY (codcrime),
+					CONSTRAINT fk_DELEGACIA_CRIME FOREIGN KEY (coddel) REFERENCES DELEGACIA (coddel),					  
+					CONSTRAINT fk_VITIMA_CRIME FOREIGN KEY (codvitima) REFERENCES VITIMA (codvitima),
+					CONSTRAINT fk_CRIMINOSO_CRIME FOREIGN KEY (codcriminoso) REFERENCES CRIMINOSO (codcriminoso));
+					
+  INSERT INTO CRIME VALUES (default, '2020-03-22', 'IFSP', 1, 1, 1),
+  (default, '2020-04-12', 'Hospital', 2, 2, 2),
+  (default, '2021-05-02', 'Banco', 3, 3, 3),
+  (default, '2020-06-07', 'Avenida', 1, 4, 4),
+  (default, '2022-07-14', 'Rua', 2, 5, 5),
+  (default, '2019-08-09', 'Mercadinho', 3, 6, 6),
+  (default, '2023-09-23', 'Concha Acústica', 1, 7, 7),
+  (default, '2017-10-30', 'Praça da Matriz', 2, 8, 1),
+  (default, '2006-11-30', 'IFSP', 3, 1, 2),
+  (default, '2030-12-29', 'Banco', 1, 2, 3);
+  
+  SELECT * FROM CRIME;
+  
+  --6) SELECIONE O CRIMINOSO COM O NOME RAFAEL
+  
+  SELECT * FROM CRIMINOSO WHERE nome = 'Rafael';
+  
+  -- SELECIONE AS VITIMAS QUE RESIDEM NO MUNICÍPIO DE VOTUPORANGA
+  
+  SELECT * FROM VITIMA WHERE cidade = 'Votuporanga';
+ 
+ -- SELECIONE O NOME DOS CRIMINOSOS QUE COMETERAM CRIMES NO IFSP
+ 
+  SELECT CRIMINOSO.nome, CRIME.local
+  	FROM CRIMINOSO INNER JOIN CRIME
+	ON CRIMINOSO.codcriminoso = CRIME.codcriminoso
+	WHERE CRIME.local = 'IFSP';
+	
+--SELECIONE O NOME DAS VÍTIMAS DOS CRIMES OCORRIDOS NO BANCO
+
+  SELECT VITIMA.nome, CRIME.local
+  	FROM VITIMA INNER JOIN CRIME
+	ON VITIMA.codvitima = CRIME.codvitima
+	WHERE CRIME.local = 'Banco';
+ 
